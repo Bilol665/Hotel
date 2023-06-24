@@ -1,15 +1,18 @@
 package uz.pdp.hotel.service.utils;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.DefaultJwtBuilder;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import uz.pdp.hotel.entity.user.UserEntity;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class JwtService {
@@ -19,8 +22,8 @@ public class JwtService {
     private long accessTokenExpiry;
 
     public String  generateAccessToken(UserEntity userEntity) {
-        return new DefaultJwtBuilder()
-                .signWith(SignatureAlgorithm.ES512,Base64.getDecoder().decode(key))
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS512,key)
                 .setSubject(userEntity.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + accessTokenExpiry))
@@ -34,6 +37,6 @@ public class JwtService {
                 .toList();
     }
     public Jws<Claims> extractToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(Base64.getDecoder().decode(key)).build().parseClaimsJws(token);
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
     }
 }
