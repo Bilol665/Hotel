@@ -1,6 +1,8 @@
 package uz.pdp.hotel.entity.room;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 import uz.pdp.hotel.entity.BaseEntity;
@@ -15,9 +17,11 @@ public class RoomEntity extends BaseEntity {
     private String number;
     private Integer size;
     private Double price;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "type")
     private RoomType type;
     private Boolean hasMonitor;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "status")
     private RoomStatus status;
 }

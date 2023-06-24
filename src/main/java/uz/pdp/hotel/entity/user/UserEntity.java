@@ -7,8 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.pdp.hotel.entity.BaseEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +17,7 @@ import java.util.List;
 @Getter
 @Builder
 public class UserEntity extends BaseEntity implements UserDetails {
+    @Column(unique = true)
     private String email;
     private String name;
     private String password;
@@ -26,6 +25,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private Integer unpaidReqs;
     private Integer canceledReqs;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "role")
     private UserRole role;
     private Boolean isBlocked;
 

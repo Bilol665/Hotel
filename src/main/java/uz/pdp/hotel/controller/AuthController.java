@@ -1,7 +1,9 @@
 package uz.pdp.hotel.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.hotel.entity.dto.LoginDto;
 import uz.pdp.hotel.entity.dto.UserCreateDto;
@@ -16,16 +18,18 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<UserEntity> signUp(
-            @RequestBody UserCreateDto userCreateDto
+    public ResponseEntity<UserEntity> signUpUser(
+            @Valid @RequestBody UserCreateDto userCreateDto,
+            BindingResult bindingResult
     ) {
-        return ResponseEntity.ok(userService.save(userCreateDto));
+        return ResponseEntity.ok(userService.save(userCreateDto,"ROLE_ADMIN",bindingResult));
     }
     @GetMapping("/login")
     public ResponseEntity<JwtResponse> login(
-            @RequestBody LoginDto loginDto
+            @Valid @RequestBody LoginDto loginDto,
+            BindingResult bindingResult
     ) {
-        return ResponseEntity.ok(userService.login(loginDto));
+        return ResponseEntity.ok(userService.login(loginDto,bindingResult));
     }
 
 }
