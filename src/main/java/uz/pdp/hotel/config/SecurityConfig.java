@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/v1/auth/sign-up").permitAll()
+                        .requestMatchers("/api/v1/auth/sign-up","/api/v1/auth/login").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(authenticationService,jwtService),
