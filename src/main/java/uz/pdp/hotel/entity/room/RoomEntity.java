@@ -16,7 +16,7 @@ import uz.pdp.hotel.entity.BaseEntity;
 public class RoomEntity extends BaseEntity {
     private String number;
     private Integer size;
-    private Double price;
+    private Double pricePerNight;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "type")
     private RoomType type;
