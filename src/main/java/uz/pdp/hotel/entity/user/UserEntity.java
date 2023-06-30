@@ -1,5 +1,6 @@
 package uz.pdp.hotel.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
     private String name;
+    @JsonIgnore
     private String password;
     private Integer age;
     private Integer unpaidReqs;

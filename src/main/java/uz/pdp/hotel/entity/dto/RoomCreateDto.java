@@ -14,7 +14,7 @@ public class RoomCreateDto {
     private String number;
     private Integer size;
     @NotNull(message = "Price should be set")
-    private Double price;
+    private Double pricePerNight;
     private String type;
     private Boolean hasMonitor;
     private String status;
