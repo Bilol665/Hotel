@@ -17,8 +17,10 @@ import uz.pdp.hotel.repository.room.RoomRepository;
 import uz.pdp.hotel.repository.room.RoomStatusRepository;
 import uz.pdp.hotel.repository.room.RoomTypeRepository;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -49,18 +51,10 @@ public class RoomService {
             roomEntity.setHasMonitor(false);
         if(roomCreateDto.getSize() == null)
             roomEntity.setSize(2);
-        BookingRequest bookingRequest = BookingRequest.builder()
-                .room(roomEntity)
-                .user(null)
-                .totalPrice(roomEntity.getPricePerNight())
-                .beginDate(null)
-                .endDate(new Date())
-                .build();
-        return roomBookingRequestRepository.save(bookingRequest).getRoom();
+        return roomRepository.save(roomEntity);
     }
-    public List<BookingRequest> getAll(int size, double price, Boolean hasMonitor, String date, String roomType, Boolean isEmpty, int page, int pageSize) {
-        PageRequest pageable = PageRequest.of(page,pageSize, Sort.by(Sort.Direction.DESC,"totalPrice"));
-        if(hasMonitor == null) hasMonitor = false;
-        return roomBookingRequestRepository.getAllBySize(size,size+5,roomType,price,hasMonitor,pageable);
+    public List<RoomEntity> getAll(int size, double price, Boolean hasMonitor, String date, String roomType, Boolean isEmpty, int page, int pageSize) {
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "pricePerNight"));
+        return roomRepository.getAllBySize(size, size + 5, roomType, price, hasMonitor, pageable);
     }
 }
