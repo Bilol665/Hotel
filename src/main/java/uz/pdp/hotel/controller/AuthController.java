@@ -22,7 +22,7 @@ public class AuthController {
             @Valid @RequestBody UserCreateDto userCreateDto,
             BindingResult bindingResult
     ) {
-        return ResponseEntity.ok(userService.save(userCreateDto,"ROLE_ADMIN",bindingResult));
+        return ResponseEntity.ok(userService.save(userCreateDto,"ROLE_USER",bindingResult));
     }
     @GetMapping("/login")
     public ResponseEntity<JwtResponse> login(

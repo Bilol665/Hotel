@@ -2,22 +2,28 @@ package uz.pdp.hotel.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.hotel.entity.dto.RequestDto;
 import uz.pdp.hotel.entity.dto.RoomCreateDto;
 import uz.pdp.hotel.entity.request.BookingRequest;
 import uz.pdp.hotel.entity.room.RoomEntity;
+import uz.pdp.hotel.service.room.BookingRequestService;
 import uz.pdp.hotel.service.room.RoomService;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/room")
 public class RoomController {
-    public final RoomService roomService;
+    private final BookingRequestService bookingRequestService;
+    private final RoomService roomService;
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
@@ -28,8 +34,8 @@ public class RoomController {
         return ResponseEntity.ok(roomService.save(roomCreateDto,bindingResult));
     }
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<BookingRequest>> getAll(
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<RoomEntity>> getAll(
             @RequestParam(required = false,defaultValue = "2") int size,
             @RequestParam(required = false,defaultValue = "0") double price,
             @RequestParam(required = false,defaultValue = "null",name = "has_monitor") Boolean hasMonitor,
@@ -40,5 +46,24 @@ public class RoomController {
             @RequestParam(required = false,defaultValue = "10",name = "page_size") int pageSize
     ){
         return ResponseEntity.ok(roomService.getAll(size,price,hasMonitor,date,roomType,isEmpty,page, pageSize));
+    }
+    @GetMapping("/get/{roomId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<BookingRequest> getRoom(
+            @PathVariable UUID roomId
+    ){
+        return ResponseEntity.ok(bookingRequestService.get(roomId));
+    }
+
+
+
+    @PutMapping("/book")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<BookingRequest> bookRoom(
+            @Valid @RequestBody RequestDto requestDto,
+            Principal principal,
+            BindingResult bindingResult
+    ) {
+        return ResponseEntity.ok(bookingRequestService.book(requestDto,principal,bindingResult));
     }
 }
