@@ -2,19 +2,16 @@ package uz.pdp.hotel.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.hotel.entity.dto.RequestDto;
 import uz.pdp.hotel.entity.dto.RoomCreateDto;
 import uz.pdp.hotel.entity.request.BookingRequest;
 import uz.pdp.hotel.entity.room.RoomEntity;
 import uz.pdp.hotel.service.room.BookingRequestService;
 import uz.pdp.hotel.service.room.RoomService;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,17 +50,5 @@ public class RoomController {
             @PathVariable UUID roomId
     ){
         return ResponseEntity.ok(bookingRequestService.get(roomId));
-    }
-
-
-
-    @PutMapping("/book")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<BookingRequest> bookRoom(
-            @Valid @RequestBody RequestDto requestDto,
-            Principal principal,
-            BindingResult bindingResult
-    ) {
-        return ResponseEntity.ok(bookingRequestService.book(requestDto,principal,bindingResult));
     }
 }
