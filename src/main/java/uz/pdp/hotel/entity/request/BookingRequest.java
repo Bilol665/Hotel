@@ -29,9 +29,7 @@ public class BookingRequest extends BaseEntity {
     private UserEntity user;
     @ManyToOne(cascade = CascadeType.ALL)
     private RoomEntity room;
-    @JsonIgnore
     private Double totalPrice;
-    @JsonIgnore
     @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
