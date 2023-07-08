@@ -91,6 +91,9 @@ public class BookingRequestService {
         if(bookingId == null)
             throw new DataNotFoundException("Id is not given!");
         try{
+            if(Objects.equals(roomBookingRequestRepository.findById(bookingId).orElseThrow(() -> new DataNotFoundException("Booking not found!")).getStatus(),
+                    roomBookingRequestStatusRepository.findById("CANCELED").orElseThrow()))
+                throw new NotAcceptable("Sorry but your booking was canceled");
             roomBookingRequestRepository.moveToUnpaid(roomBookingRequestStatusRepository.findById("UNPAID").orElseGet(
                     () -> roomBookingRequestStatusRepository.save(new RequestStatus("UNPAID"))
             ), bookingId);
@@ -126,6 +129,8 @@ public class BookingRequestService {
         if(!Objects.equals(bookingRequest.getUser(),userEntity)) {
             throw new DataNotFoundException("Booking not found!");
         }
+        if(Objects.equals(bookingRequest.getStatus(),roomBookingRequestStatusRepository.findById("CANCELED").orElseThrow()))
+            throw new NotAcceptable("Your booking was canceled");
         return bookingRequest;
     }
 
