@@ -40,7 +40,9 @@ public class BookingRequestService {
         RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
                 () -> new DataNotFoundException("Room not found!")
         );
-        if(Objects.equals(roomEntity.getStatus(),roomStatusRepository.findById("EMPTY").get()))
+        if(Objects.equals(roomEntity.getStatus(),roomStatusRepository.findById("EMPTY").orElseGet(
+                () -> roomStatusRepository.save(new RoomStatus("EMPTY"))
+        )))
             return roomEntity;
         return roomBookingRequestRepository.getByRoomId(roomId).orElseThrow(
                 () -> new DataNotFoundException("Booking not found!")
