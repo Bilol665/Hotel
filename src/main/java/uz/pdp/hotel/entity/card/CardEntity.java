@@ -1,11 +1,13 @@
 package uz.pdp.hotel.entity.card;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import uz.pdp.hotel.entity.BaseEntity;
 import uz.pdp.hotel.entity.user.UserEntity;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity(name = "cards")
@@ -14,12 +16,13 @@ import java.util.Date;
 @Setter
 @Getter
 @Builder
+@ToString
 public class CardEntity extends BaseEntity {
     private String number;
     private Double balance;
     private Date expiryDate;
     @ManyToOne
     private UserEntity owner;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     private CardType type;
 }
