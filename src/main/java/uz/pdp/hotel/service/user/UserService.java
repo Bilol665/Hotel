@@ -37,9 +37,10 @@ public class UserService {
         UserEntity map = modelMapper.map(userCreateDto, UserEntity.class);
         if(userCreateDto.getName().isBlank())
             map.setName(map.getEmail());
-        int size = userRoleRepository.findUserRolesByRole(role).size();
+        List<UserRole> userRolesByRole = userRoleRepository.findUserRolesByRole(role);
+        int size = userRolesByRole.size();
         if(size == 1)
-            map.setRole(userRoleRepository.findUserRolesByRole(role).get(0));
+            map.setRole(userRolesByRole.get(0));
         else if(size == 0)
             map.setRole(new UserRole(role));
         map.setPassword(passwordEncoder.encode(map.getPassword()));
