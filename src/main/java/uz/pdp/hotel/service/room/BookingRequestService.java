@@ -40,7 +40,9 @@ public class BookingRequestService {
         RoomEntity roomEntity = roomRepository.findById(roomId).orElseThrow(
                 () -> new DataNotFoundException("Room not found!")
         );
-        if(Objects.equals(roomEntity.getStatus(),roomStatusRepository.findById("EMPTY").get()))
+        if(Objects.equals(roomEntity.getStatus(),roomStatusRepository.findById("EMPTY").orElseGet(
+                () -> roomStatusRepository.save(new RoomStatus("EMPTY"))
+        )))
             return roomEntity;
         return roomBookingRequestRepository.getByRoomId(roomId).orElseThrow(
                 () -> new DataNotFoundException("Booking not found!")
@@ -127,4 +129,27 @@ public class BookingRequestService {
         return bookingRequest;
     }
 
+    public void cancel(UUID bookingId, Principal principal) {
+        BookingRequest bookingRequest = roomBookingRequestRepository.findById(bookingId).orElseThrow(
+                () -> new DataNotFoundException("Booking not found!")
+        );
+        if(!Objects.equals(bookingRequest.getUser().getEmail(),principal.getName()))
+            throw new NotAcceptable("You cannot cancel this booking!");
+        bookingRequest.setStatus(roomBookingRequestStatusRepository.findById("CANCELED").orElseGet(
+                () -> roomBookingRequestStatusRepository.save(new RequestStatus("CANCELED"))
+        ));
+        roomBookingRequestRepository.save(bookingRequest);
+    }
+
+    public void pay(UUID bookingId, Principal principal) {
+        BookingRequest bookingRequest = roomBookingRequestRepository.findById(bookingId).orElseThrow(
+                () -> new DataNotFoundException("Booking not found!")
+        );
+        if(!Objects.equals(bookingRequest.getUser().getEmail(),principal.getName()))
+            throw new NotAcceptable("You cannot pay by the reason that it is not your booking!");
+        bookingRequest.setStatus(roomBookingRequestStatusRepository.findById("PAID").orElseGet(
+                () -> roomBookingRequestStatusRepository.save(new RequestStatus("PAID"))
+        ));
+        roomBookingRequestRepository.save(bookingRequest);
+    }
 }
