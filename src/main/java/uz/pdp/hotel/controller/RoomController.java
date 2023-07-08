@@ -46,7 +46,7 @@ public class RoomController {
     }
     @GetMapping("/get/{roomId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<BookingRequest> getRoom(
+    public ResponseEntity<Object> getRoom(
             @PathVariable UUID roomId
     ){
         return ResponseEntity.ok(bookingRequestService.get(roomId));
