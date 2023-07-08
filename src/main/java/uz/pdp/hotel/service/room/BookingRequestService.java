@@ -127,4 +127,27 @@ public class BookingRequestService {
         return bookingRequest;
     }
 
+    public void cancel(UUID bookingId, Principal principal) {
+        BookingRequest bookingRequest = roomBookingRequestRepository.findById(bookingId).orElseThrow(
+                () -> new DataNotFoundException("Booking not found!")
+        );
+        if(!Objects.equals(bookingRequest.getUser().getEmail(),principal.getName()))
+            throw new NotAcceptable("You cannot cancel this booking!");
+        bookingRequest.setStatus(roomBookingRequestStatusRepository.findById("CANCELED").orElseGet(
+                () -> roomBookingRequestStatusRepository.save(new RequestStatus("CANCELED"))
+        ));
+        roomBookingRequestRepository.save(bookingRequest);
+    }
+
+    public void pay(UUID bookingId, Principal principal) {
+        BookingRequest bookingRequest = roomBookingRequestRepository.findById(bookingId).orElseThrow(
+                () -> new DataNotFoundException("Booking not found!")
+        );
+        if(!Objects.equals(bookingRequest.getUser().getEmail(),principal.getName()))
+            throw new NotAcceptable("You cannot pay by the reason that it is not your booking!");
+        bookingRequest.setStatus(roomBookingRequestStatusRepository.findById("PAID").orElseGet(
+                () -> roomBookingRequestStatusRepository.save(new RequestStatus("PAID"))
+        ));
+        roomBookingRequestRepository.save(bookingRequest);
+    }
 }

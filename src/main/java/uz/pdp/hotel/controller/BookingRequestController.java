@@ -2,6 +2,7 @@ package uz.pdp.hotel.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -27,27 +28,46 @@ public class BookingRequestController {
     ) {
         return ResponseEntity.ok(bookingRequestService.book(requestDto,principal,bindingResult));
     }
-    @PutMapping("/unpaid")
+    @PutMapping("/unpaid/{bookingId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> unpaid(
-            @RequestParam(required = false,defaultValue = "") UUID bookingId
+            @PathVariable UUID bookingId
     ) {
         return ResponseEntity.ok(bookingRequestService.moveToUnpaid(bookingId));
     }
-    @PutMapping("/status")
+    @PutMapping("/status/{bookingId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> status(
             @RequestParam(required = false,defaultValue = "") String status,
-            @RequestParam(required = false,defaultValue = "") UUID bookingId
+            @PathVariable UUID bookingId
     ) {
         return ResponseEntity.ok(bookingRequestService.changeStatus(status,bookingId));
     }
-    @GetMapping("/getRoom")
+    @GetMapping("/getRoom/{bookingId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingRequest> getUserRoom(
-            @RequestParam(required = false,defaultValue = "") UUID bookingId,
+            @PathVariable UUID bookingId,
             Principal principal
     ) {
         return ResponseEntity.ok(bookingRequestService.get(principal,bookingId));
     }
+    @PutMapping("/cancel/{bookingId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<HttpStatus> cancel(
+            @PathVariable UUID bookingId,
+            Principal principal
+    ) {
+        bookingRequestService.cancel(bookingId,principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PutMapping("/pay/{bookingId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<HttpStatus> pay(
+            @PathVariable UUID bookingId,
+            Principal principal
+    ) {
+        bookingRequestService.pay(bookingId,principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
