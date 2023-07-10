@@ -35,8 +35,8 @@ public class RoomController {
     public ResponseEntity<List<RoomEntity>> getAll(
             @RequestParam(required = false,defaultValue = "2") int size,
             @RequestParam(required = false,defaultValue = "0") double price,
-            @RequestParam(required = false,defaultValue = "null",name = "has_monitor") Boolean hasMonitor,
-            @RequestParam(required = false,defaultValue = "null") String date,
+            @RequestParam(required = false,defaultValue = "",name = "has_monitor") Boolean hasMonitor,
+            @RequestParam(required = false,defaultValue = "") String date,
             @RequestParam(required = false,defaultValue = "0",name = "room_type") String roomType,
             @RequestParam(required = false,defaultValue = "false") Boolean isEmpty,
             @RequestParam(required = false,defaultValue = "0") int page,
