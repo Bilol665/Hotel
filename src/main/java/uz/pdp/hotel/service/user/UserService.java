@@ -19,6 +19,7 @@ import uz.pdp.hotel.repository.user.UserRoleRepository;
 import uz.pdp.hotel.service.utils.JwtService;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +65,16 @@ public class UserService {
             return JwtResponse.builder().accessToken(accessToken).build();
         }
         throw new FailedAuthorizeException("Password is incorrect!");
+    }
+
+    public void block(UUID userId) {
+        userRepository.block(userRoleRepository.findById("BLOCKED").orElseGet(
+                () -> userRoleRepository.save(new UserRole("BLOCKED"))
+        ),userId);
+    }
+    public void unBlock(UUID userId) {
+        userRepository.block(userRoleRepository.findById("UNBLOCKED").orElseGet(
+                () -> userRoleRepository.save(new UserRole("UNBLOCKED"))
+        ),userId);
     }
 }
