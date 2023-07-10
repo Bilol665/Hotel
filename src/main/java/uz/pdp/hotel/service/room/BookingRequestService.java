@@ -1,6 +1,5 @@
 package uz.pdp.hotel.service.room;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -23,7 +22,10 @@ import uz.pdp.hotel.repository.user.UserRepository;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +88,7 @@ public class BookingRequestService {
         return roomBookingRequestRepository.save(bookingRequest);
     }
 
-    @Transactional
+
     public Boolean moveToUnpaid(UUID bookingId) {
         if(bookingId == null)
             throw new DataNotFoundException("Id is not given!");
@@ -102,7 +104,7 @@ public class BookingRequestService {
         }
         return true;
     }
-    @Transactional
+
     public Boolean changeStatus(String status,UUID bookingId) {
         if(bookingId == null)
             throw new DataNotFoundException("Id is not given!");

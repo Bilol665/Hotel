@@ -1,5 +1,6 @@
 package uz.pdp.hotel.repository.room;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ public interface RoomBookingRequestRepository extends JpaRepository<BookingReque
     @Query("select b from bookings b where b.room.id = :id")
     Optional<BookingRequest> getByRoomId(@Param("id") UUID id);
     @Modifying
+    @Transactional
     @Query("update bookings b set b.status = :status where b.id = :id")
     void moveToUnpaid(@Param("status") RequestStatus status,@Param("id") UUID id);
 }
