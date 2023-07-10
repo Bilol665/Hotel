@@ -35,7 +35,6 @@ public class BookingRequestService {
     private final RoomStatusRepository roomStatusRepository;
     private final RoomBookingRequestRepository roomBookingRequestRepository;
     private final RoomBookingRequestStatusRepository roomBookingRequestStatusRepository;
-
     public Object get(UUID roomId) {
         if(roomId == null)
             throw new DataNotFoundException("Id is not given!");
